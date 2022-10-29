@@ -17,13 +17,8 @@ async def gestionnaire():
     joueurs = await asyncio.start_server(gestionJoueur, 'localhost', 667)
     croupiers = await asyncio.start_server(gestionCroupier, 'localhost', 668)
     print("Server on")
-    async with AsyncExitStack() as stack:
-        await stack.enter_async_context(joueurs)
-        await stack.enter_async_context(croupiers)
-        await asyncio.gather(
-            joueurs.serve_forever(),
-            croupiers.serve_forever(),
-        )
+    async with croupiers:
+        await croupiers.serve_forever() # handle requests for ever
 
 
 if __name__ == "__main__":
