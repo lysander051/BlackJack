@@ -5,7 +5,6 @@ import asyncio
 from sys import argv
 
 async def gestionCroupier(reader, writer):
-    data = await reader.read()
     print ("presque")
     writer.write(("Bienvenue sur le serveur blackjack").encode())
 
