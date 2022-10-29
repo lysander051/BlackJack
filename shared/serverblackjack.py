@@ -17,7 +17,7 @@ async def gestionnaire():
     croupiers = await asyncio.start_server(gestionCroupier, '0.0.0.0', 668)
     print("Server on")
     async with croupiers:
-        croupiers.serve_forever()
+        awaitcroupiers.serve_forever()
         
 
 
