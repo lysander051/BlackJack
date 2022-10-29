@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+from sys import argv
 from contextlib import AsyncExitStack
 
 async def gestionCroupier(reader, writer):
-    data = reader.readline()
+    data = awaitreader.readline()
     print(data.decode())
     writer.write(("Bienvenue sur le serveur blackjack").encode())
 
 async def gestionJoueur(reader, writer):
-    await writer.write(("Bienvenue joueur".encode()))
+    writer.write(("Bienvenue joueur".encode()))
 
 
 async def gestionnaire():
