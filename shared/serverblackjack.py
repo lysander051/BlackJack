@@ -6,7 +6,7 @@ from sys import argv
 from contextlib import AsyncExitStack
 
 async def gestionCroupier(reader, writer):
-    data = awaitreader.readline()
+    data = await reader.readline()
     print(data.decode())
     writer.write(("Bienvenue sur le serveur blackjack").encode())
 
