@@ -5,7 +5,7 @@ import asyncio
 from sys import argv
 
 async def gestionCroupier(reader, writer):
-    data = await reader.reader()
+    data = await reader.read()
     writer.write(("Bienvenue sur le serveur blackjack").encode())
 
 async def gestionJoueur(reader, writer):
