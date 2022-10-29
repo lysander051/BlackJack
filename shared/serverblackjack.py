@@ -5,6 +5,8 @@ import asyncio
 from contextlib import AsyncExitStack
 
 async def gestionCroupier(reader, writer):
+    await data = reader.readline()
+    print(data.decode())
     await writer.write(("Bienvenue sur le serveur blackjack").encode())
 
 async def gestionJoueur(reader, writer):
