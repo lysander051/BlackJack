@@ -14,7 +14,7 @@ async def gestionJoueur(reader, writer):
 
 
 async def gestionnaire():
-    croupiers = await asyncio.start_server(gestionCroupier, 'localhost', 668)
+    croupiers = await asyncio.start_server(gestionCroupier, '0.0.0.0', 668)
     print("Server on")
     async with croupiers:
         await croupiers.serve_forever() # handle requests for ever
