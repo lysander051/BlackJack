@@ -18,8 +18,8 @@ async def gestionnaire():
         await stack.enter_async_context(s1)
         await stack.enter_async_context(s2)
         await asyncio.gather(
-            s1.serve_forever(),
-            s2.serve_forever(),
+            joueurs.serve_forever(),
+            croupiers.serve_forever(),
         )
 
 
