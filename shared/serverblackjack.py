@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import asyncio
-from sys import argv
 
 async def gestionCroupier(reader, writer):
     writer.write(("Bienvenue sur le serveur blackjack").encode())
