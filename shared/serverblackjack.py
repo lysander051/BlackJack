@@ -3,9 +3,9 @@
 
 import asyncio
 from sys import argv
-from contextlib import AsyncExitStack
 
 async def gestionCroupier(reader, writer):
+    data = await reader.reader()
     writer.write(("Bienvenue sur le serveur blackjack").encode())
 
 async def gestionJoueur(reader, writer):
