@@ -1,11 +1,11 @@
 import asyncio
-#from sys import argv
+from sys import argv
 
 async def gestionCroupier(reader, writer):
-    writer.write(("Bienvenue sur le serveur blackjack").encore())
+    writer.write(("Bienvenue sur le serveur blackjack").encode())
 
 async def gestionJoueur(reader, writer):
-    writer.write(("Bienvenue joueur".encore()))
+    writer.write(("Bienvenue joueur".encode()))
 
 
 async def gestionnaire():
