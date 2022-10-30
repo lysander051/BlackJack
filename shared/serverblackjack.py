@@ -4,8 +4,20 @@
 import asyncio
 from sys import argv
 
+class Table:
+    def __init__(self, table):
+        self.table = table
+
+    def __str__():
+        return "nom de la table = " + str(self.table)
+
 async def gestionCroupier(reader, writer):
-    writer.write(("Bienvenue sur le serveur blackjack\n").encode())
+    print("Un croupiers creait une table")
+    writer.write(("Bienvenue croupier\n").encode())
+    table = await reader.read().decode()
+    t = Table(table)
+    print(t)
+
 
 async def gestionJoueur(reader, writer):
     writer.write(("Bienvenue joueur\n".encode()))
