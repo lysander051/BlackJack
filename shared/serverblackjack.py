@@ -11,7 +11,7 @@ class Table:
     def __str__(self):
         return "nom de la table = " + str(self.table)
 
-async def commandes(com):
+def commandes(com):
     prefix = com[:3]
     if prefix == NAME:
         return com[3:]
