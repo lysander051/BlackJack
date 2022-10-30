@@ -14,7 +14,7 @@ class Table:
 async def gestionCroupier(reader, writer):
     print("Un croupiers creait une table")
     writer.write(("Bienvenue croupier\n").encode())
-    table = await reader.read()
+    table = await reader.readline()
     t = Table(table.decode())
     print(t)
 
