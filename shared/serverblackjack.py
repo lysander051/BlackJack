@@ -8,7 +8,7 @@ class Table:
     def __init__(self, table):
         self.table = table
 
-    def __str__():
+    def __str__(self):
         return "nom de la table = " + str(self.table)
 
 async def gestionCroupier(reader, writer):
