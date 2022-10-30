@@ -10,7 +10,7 @@ class Table:
         self.temps = temps
 
     def __str__(self):
-        return "nom = " + str(self.table) + " | temps = " + self.temps
+        return "nom = " + str(self.table) + " | temps = " + str(self.temps)
 
 
 def commandes(com):
