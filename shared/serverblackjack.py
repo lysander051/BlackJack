@@ -19,7 +19,7 @@ async def commandes(com):
 async def gestionCroupier(reader, writer):
     print("Un croupiers creait une table")
     writer.write(("Bienvenue croupier\n").encode())
-    table = await commandes((reader.readline()).decode())
+    table = commandes((await reader.readline()).decode())
     t = Table(table)
     print(t)
 
