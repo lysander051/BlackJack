@@ -34,7 +34,7 @@ async def gestionCroupier(reader, writer):
     temps = commandes((await reader.readline()).decode())
     t.temps = temps
     print(t)
-    writer.write(("la duree de la table est:" + t.temps + " \n").encode())
+    writer.write(("la duree de la table est:" + str(t.temps) + " \n").encode())
 
 async def gestionJoueur(reader, writer):
     writer.write(("Bienvenue joueur\n".encode()))
