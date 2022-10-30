@@ -18,7 +18,7 @@ def commandes(com):
     if prefix[0] == "NAME":
         return prefix[1]
     elif prefix[0] == "TIME":
-        return prefix[1]
+        return int(prefix[1])
     else:
         return "erreur"
 
@@ -32,7 +32,7 @@ async def gestionCroupier(reader, writer):
     writer.write(("Le nom de la table est:" + t.table + " \n").encode())
 
     temps = commandes((await reader.readline()).decode())
-    t = Table(temps)
+    t.temps = temps
     print(t)
     writer.write(("la duree de la table est:" + t.temps + " \n").encode())
 
