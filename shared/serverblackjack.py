@@ -5,18 +5,21 @@ import asyncio
 from sys import argv
 
 async def gestionCroupier(reader, writer):
+    data = await reader.readline()
     print ("presque")
-    await writer.write(("Bienvenue sur le serveur blackjack").encode())
+    writer.write(("Bienvenue sur le serveur blackjack").encode())
 
 async def gestionJoueur(reader, writer):
     writer.write(("Bienvenue joueur".encode()))
 
 
 async def gestionnaire():
+    joueurs = await asyncio.start_server(gestionJoueur, '0.0.0.0', 667)
     croupiers = await asyncio.start_server(gestionCroupier, '0.0.0.0', 668)
     print("Server on")
-    async with croupiers:
-        await croupiers.serve_forever()
+    async with joueurs, croupiers:
+        await asyncio.gather(
+            joueurs.serve_forever(), croupiers.serve_forever())
         
 
 
