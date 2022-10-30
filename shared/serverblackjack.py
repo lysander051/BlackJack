@@ -13,7 +13,7 @@ class Table:
 
 def commandes(com):
     prefix = com[0:3]
-    if prefix == "NAME":
+    if str(prefix) == "NAME":
         return com[3:]
     else:
         return "erreur"
