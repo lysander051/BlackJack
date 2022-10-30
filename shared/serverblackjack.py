@@ -15,6 +15,8 @@ async def commandes(com):
     prefix = com[:3]
     if prefix == NAME:
         return com[3:]
+    else:
+        return "erreur"
 
 async def gestionCroupier(reader, writer):
     print("Un croupiers creait une table")
