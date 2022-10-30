@@ -12,7 +12,7 @@ class Table:
         return "nom de la table = " + str(self.table)
 
 def commandes(com):
-    prefix = com[:3]
+    prefix = com[0:3]
     if prefix == "NAME":
         return com[3:]
     else:
