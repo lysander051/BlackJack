@@ -5,15 +5,19 @@ import asyncio
 from sys import argv
 
 class Table:
-    def __init__(self, table):
+    def __init__(self, table, temps=60):
         self.table = table
+        self.temps = temps
 
     def __str__(self):
-        return "nom de la table = " + str(self.table)
+        return "nom = " + str(self.table) + " | temps = " + self.temps
+
 
 def commandes(com):
     prefix = com.split()
     if prefix[0] == "NAME":
+        return prefix[1]
+    elif prefix[0] == "TIME":
         return prefix[1]
     else:
         return "erreur"
@@ -25,9 +29,12 @@ async def gestionCroupier(reader, writer):
     table = commandes((await reader.readline()).decode())
     t = Table(table)
     print(t)
-
     writer.write(("Le nom de la table est:" + t.table + " \n").encode())
 
+    temps = commandes((await reader.readline()).decode())
+    t = Table(temps)
+    print(t)
+    writer.write(("la duree de la table est:" + t.temps + " \n").encode())
 
 async def gestionJoueur(reader, writer):
     writer.write(("Bienvenue joueur\n".encode()))
