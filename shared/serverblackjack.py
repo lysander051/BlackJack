@@ -11,11 +11,16 @@ class Table:
     def __str__(self):
         return "nom de la table = " + str(self.table)
 
+async def commandes(com):
+    prefix = com[:3]
+    if prefix = NAME:
+        return com[3:]
+
 async def gestionCroupier(reader, writer):
     print("Un croupiers creait une table")
     writer.write(("Bienvenue croupier\n").encode())
-    table = await reader.readline()
-    t = Table(table.decode())
+    table = await commandes((reader.readline()).decode())
+    t = Table(table)
     print(t)
 
 
