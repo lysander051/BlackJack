@@ -21,9 +21,12 @@ def commandes(com):
 async def gestionCroupier(reader, writer):
     print("Un croupiers creait une table")
     writer.write(("Bienvenue croupier\n").encode())
+
     table = commandes((await reader.readline()).decode())
     t = Table(table)
     print(t)
+
+    writer.write(("Le nom de la table est:" + t.table + " \n").encode())
 
 
 async def gestionJoueur(reader, writer):
