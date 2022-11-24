@@ -4,30 +4,38 @@
 import asyncio
 import random
 from sys import argv
-
+'''  La liste des tables creee par le(s) croupier(s) '''
 listeTable = []
 
 
-
+''' Classe joueurs generals où le joueur possède des cartes et un score'''
 class JoueurGen : 
+    ''' Initialisation d'un joueur général '''
     def __init__(self):
         self.cartes = []
         self.score = 0
 
+    ''' Affichage d'une carte d'un joueur général ''' 
     def strCarte(self,carte):
-        sorte=["coeur","pique","trefle","carreau"]
+        
+        #sorte=["\u2764","\u2726","\u2663","\u2666"]
+        sortes=["coeur","carreau","pique","trefle"]
         plusDix=["V","D","R"]
-        valeur=str(carte[0])
+        valeur=carte[0]
         if carte[0]>10 :
             valeur=plusDix[(carte[0]%10)-1]
-        return str((valeur,sorte[carte[1]-1]))
+        #return str(valeur,sorte[carte[1]-1]))
+        return "[   "+str(valeur) +"   " + sortes[carte[1]-1] + "  ]"
 
+
+    ''' Affichage de tous les cartes d'un joueur général '''
     def strToutCartes(self):
         s=""
         for carte in self.cartes:
-            s+=self.strCarte(carte)+"  "
+            s+=self.strCarte(carte)+"   "
         return s
 
+    ''' Calcul du score d'un joueur général avec V D R à 10 points et l'as peut compter 1 ou 11 '''
     def calculeScore(self):
         s=0
         nombreAs=0
@@ -39,201 +47,182 @@ class JoueurGen :
                     nombreAs+=1
             
                 s+=carte[0]
-        if nombreAs>0 & s-1<=10:
+        if nombreAs>0 and (s-1)<=10:
             s+=10
         return s
 
+    '''Attribuer à score le score du joueur'''
+    def setScore(self):
+        self.score=self.calculeScore()
 
-        
-
-
-    '''def strCartes(self):
-        sorte=["coeur","pique","trefle","carreau"]
-        plusDix=["V","D","R"]
-        s=""
-        for carte in self.cartes:
-            valeur=str(carte[0])
-            if carte[0]>10 :
-                valeur=plusDix[(carte[0]%10)-1]
-            s+=str((valeur,sorte[carte[1]-1]))+ "     "
-        return s'''
-
- 
-
+    ''' Affichage des cartes et du score d'un joueur classique '''
     def __str__(self):
-        #stpl = self.affichageCarte() 
-        #print(stpl)
-        #return "vos cartes= "+str(self.cartes)+" | votre score= "+ str(self.score) + "\n"
-        #return "vos cartes= "+ stpl +" | votre score= "+ str(self.score) + "\n"
-        return "vos cartes= "+ self.strToutCartes() +" | votre score= "+ str(self.calculeScore()) + "\n"
+        return self.strToutCartes() +" | score= "+ str(self.score) + "\n"
 
     
-        
-
     
-
+    
+''' Celui qui partage les cartes et aussi l'adversaire des joueurs '''
 class Donneur(JoueurGen):
+
     def __init__(self):
         super().__init__()
 
-
+    ''' Affichage d'une carte du donneur avec le score correspondant, pour montrer aux joueurs sa 1ere carte'''
     def __str__(self):
-        return "carte du donneur= "+super().strCarte(self.cartes[0]) + "\n"
-        #+" | son score= "+ str(self.cartes[0][0]) + "\n"
+        return "carte du donneur= "+super().strCarte(self.cartes[0]) + " \n"
 
+    ''' Affichage des cartes du donneur et son score lors de son tour'''
+    def __strJeuFin__(self):
+        return "carte du donneur= "+ super().__str__() 
+
+
+
+
+''' Classe des joueurs '''
 class Joueur(JoueurGen):
-    def __init__(self, id, reader, writer):
+
+    ''' Initialisation d'un joueur qui a un attribut joue pour savoir s'il joue encore '''
+    def __init__(self):
         super().__init__()
-        self.id = id
-        self.reader = reader
-        self.writer = writer
         self.joue = True
 
+    ''' Affichage des cartes et du score d'un joueur'''
+    def __str__(self):
+        return "vos cartes= "+ super().__str__()
+   
+
     
-        #return "vos cartes= "+str(self.cartes)+" | votre score= "+ str(self.score) + "\n"
 
-# heritage joueur ( donneur et joueur) 
-# fonction affichage carte joueur general
-# fonction score joueur general
-
+''' Classe table '''
 class Table:
+
+    ''' Initialisation d'une table qui possède un nom de table, le temps d'attente, les joueurs, les cartes et le donneur'''
     def __init__(self, nom):
         self.nom = nom
         self.temps = 0
         self.joueurs = []
         self.cartes = []
         self.donneur = Donneur()
-        self.joueursJouer = []
 
+    ''' Fabrication des 52 cartes '''
     def initialisationCarte(self):
         for i in range (1,5):
             for j in range(1,14):
                 self.cartes.append((j,i))
-    def donnercarte(self,joueur):
-        carte = self.cartes.pop(random.randint(0,len(self.cartes)-1))
-        joueur.cartes.append(carte)
-       
 
+    ''' Donner une carte aléatoire à un joueur '''
+    def donnercarte(self,j):
+        carte = self.cartes.pop(random.randint(0,len(self.cartes)-1))
+        j.cartes.append(carte)
+        j.setScore()
+       
+    ''' Initialisation d'une partie en fabriquant les cartes et en distribuant 2 à chaque joueur'''
     def initialisationPartie(self):
         if self.cartes==[]:
             self.initialisationCarte()
             print(self.cartes)
             for i in range(2):
-                carte = self.cartes.pop(random.randint(0,len(self.cartes)-1))
-                self.donneur.cartes.append(carte)
-                self.donneur.score+=carte[0]
+                #carte = self.cartes.pop(random.randint(0,len(self.cartes)-1))
+                self.donnercarte(self.donneur)
+                #self.donneur.setScore()
+                #self.donneur.cartes.append(carte)
+                #self.donneur.score+=carte[0]
                 for x in self.joueurs:
-                    #carte = self.cartes.pop(random.randint(0,len(self.cartes)-1))
-                    x.cartes.append(self.donnercarte())
-                    #x.score+=carte[0]
+                    self.donnercarte(x)
+                    #x.setScore()
                     print(self.donneur)
 
+    ''' Affichage d'une table : son nom et son temps d'attente '''
     def __str__(self):
         return "nom = " + str(self.nom) + " | temps = " + str(self.temps)
 
+    ''' Pour savoir s'il y a encore des joueurs qui jouent '''
     def joueurQuiJoue(self):
         for j in self.joueurs:
             if j.joue:
                 return True
         return False
 
-def resultatjoueur(joueur):
-    if(joueur.calculeScore()>21):
+
+''' Quand le joueur décide d'arreter de jouer ou bien quand il dépasse 21 points '''
+def resultatjoueur(joueur,writer):
+    if(joueur.score>21):
         writer.write("vous depassez 21 c'est fini\n".encode())
-    else if(joueur.calculeScore()<21):
-        s="vous ete à " + str(joueur.calculeScore()) + " avec un peu de chance vous allez gagner\n"
-         writer.write(s.encode())
+    elif(joueur.score<21):
+        s="vous ete à " + str(joueur.score) + " avec un peu de chance vous allez gagner\n"
+        writer.write(s.encode())
     else:
         s= "vous avez 21 on n'attend plus que le donneur\n" 
         writer.write(s.encode())
 
-
-
-
+''' '''
 def parcourJoueurs(table, joueur):
     for x in table.joueurs:
         if x.id[0] == joueur.id[0]:
             return x
     return None
 
+''' Parcourir la liste des tables pour savoir à quelle table le joueur va jouer'''
 def parcourTable(table):
     for x in listeTable:
         if x.nom == table:
             return x
     return None
 
+''' En attente des joueurs qui viennent à la table pour jouer '''
 async def attenteTable(table):
     while 0 <= table.temps :
         await asyncio.sleep(1)
         table.temps-=1
 
+''''''
 async def partie(reader, writer,joueur,table):
     writer.write(".\n".encode())
-        while(joueur.joue):
-            suite = commandes((await reader.readline()).decode())
-            if suite == 0 :
-                joueur.resultatjoueur()
-                writer.write((str(j)).encode())
-                joueur.joue=false
-                joueur.score=joueur.calculeScore()
-            else :
-                table.donnercarte(joueur)
-                writer.write((str(joueur)).encode())
-                writer.write((".\n").encode())
-            if joueur.calculeScore()>21 :
-                joueur.resultatjoueur()
-                joueur.joue=false
-                joueur.score=joueur.calculeScore()
-                writer.write(("END\n").encode())
+    while(joueur.joue):
+        suite = commandes((await reader.readline()).decode())
+        if suite == 0 :
+            resultatjoueur(joueur,writer)
+            writer.write((str(joueur)).encode())
+            joueur.joue=False
+            #joueur.score=joueur.calculeScore()
+        else :
+            table.donnercarte(joueur)
+            writer.write((str(joueur)).encode())
+            
+        #joueur.setScore()
+        if joueur.score>21 :
+            resultatjoueur(joueur,writer)
+            joueur.joue=False
+            writer.write(("END\n").encode())
+        if joueur.score<=21 and suite!=0 :
+            writer.write((".\n").encode())
 
-
-    await finPartie()
-
+    await finPartie(table)
     donneur=table.donneur
-    writer.write((str(donneur)).encode())
-
-    while donneur.calculeScore()<17:
-        writer.write(".").encode()
-        writer.write("1").encode()
+    writer.write((donneur.__strJeuFin__()).encode())
+    while donneur.score<17:
         table.donnercarte(donneur)
-        writer.write((str(donneur)).encode())
+        #donneur.setScore()
+        writer.write((donneur.__strJeuFin__()).encode())
 
-    donneur.score=donneur.calculeScore
-
-    if(donneur.score> joueur.score) :
-        writer.write("Le donneur a gagné")
-    else if( donneur.score ==  joueur.score):
-        writer.write("Exeaquo")
-    else : 
-        writer.write("Vous avez gagné")
-    
+    if(donneur.score >21 or donneur.score < joueur.score):
+        writer.write(("Vous avez gagné\n").encode())
+    elif(donneur.score > joueur.score) :
+        writer.write(("Le donneur a gagné\n").encode())
+    else:
+        writer.write(("Vous êtes à égalité\n").encode())
+ 
     writer.write(("END\n").encode())
     
 
-       
-   # suite = commandes((await reader.readline()).decode())
-
-
-
-
-
+''' Faire patienter les autres joueurs qui ont fini de jouer tant qu'il y a des joueurs qui n'ont pas fini de jouer'''
 async def finPartie(table) : 
     while table.joueurQuiJoue():
-        asyncio.sleep(1)
-        
-
-               
-    
-    
+        await asyncio.sleep(1)
 
 
-
-
-
-
-    
-
-
+''' Renvoie la réponse des joueurs selon les commandes fournies'''
 def commandes(com):
     prefix = com.split()
     if prefix[0] == "NAME":
@@ -245,6 +234,8 @@ def commandes(com):
     else:
         return "erreur"
 
+
+''' Crée un croupier et une table avec la durée d'attente pour pouvoir commencer à jouer sur cette table '''
 async def gestionCroupier(reader, writer):
     print("Un croupiers creait une table")
     writer.write(("Bienvenue croupier\n").encode())
@@ -261,6 +252,7 @@ async def gestionCroupier(reader, writer):
     listeTable.append(t)
 
 
+''' Crée un joueur, demande à quelle table il veut jouer et commencer la partie '''
 async def gestionJoueur(reader, writer):
     print("un joueur c'est connecte")
     writer.write(("Bienvenue joueur\n").encode())
@@ -270,10 +262,9 @@ async def gestionJoueur(reader, writer):
     if table == None or table.temps <= 0:
         writer.write("END\n".encode())
         return
-
-    joueur = Joueur(writer.get_extra_info('peername'), reader, writer)
+    print(writer.get_extra_info('peername'))
+    joueur = Joueur()
     table.joueurs.append(joueur)
-    table.joueursJouer.append(joueur)
     print("joueur ajoute a table: " + str(table.nom))
 
     await attenteTable(table)
@@ -282,9 +273,10 @@ async def gestionJoueur(reader, writer):
     writer.write((str(joueur)).encode())
     writer.write((str(table.donneur)).encode())
 
-    partie(reader,writer,joueur,table)
+    await partie(reader,writer,joueur,table)
 
 
+'''  '''
 async def gestionnaire():
     joueurs = await asyncio.start_server(gestionJoueur, '0.0.0.0', 667)
     croupiers = await asyncio.start_server(gestionCroupier, '0.0.0.0', 668)
