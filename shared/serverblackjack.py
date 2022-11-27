@@ -170,11 +170,12 @@ async def partie(reader, writer,joueur,table):
         suite = commandes((await reader.readline()).decode())
         if suite == 0 :
             resultatjoueur(joueur,writer)
-            writer.write((str(joueur)).encode())
+            writer.write((str(joueur) ).encode())
             joueur.joue=False
         else :
             table.donnercarte(joueur)
             writer.write((str(joueur)).encode())
+            writer.write((str(table.donneur)).encode())
             
         
         if joueur.score>21 :
