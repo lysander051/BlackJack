@@ -4,11 +4,11 @@
 import asyncio
 import random
 from sys import argv
-'''  La liste des tables creee par le(s) croupier(s) '''
+'''  La liste des tables creees par le(s) croupier(s) '''
 listeTable = []
 
 
-''' Classe joueurs generals où le joueur possède des cartes et un score'''
+''' Classe joueur general où le joueur possède des cartes et un score'''
 class JoueurGen : 
     ''' Initialisation d'un joueur général '''
     def __init__(self):
@@ -27,8 +27,7 @@ class JoueurGen :
         #return str(valeur,sorte[carte[1]-1]))
         return "[   "+str(valeur) +"   " + sortes[carte[1]-1] + "  ]"
 
-
-    ''' Affichage de tous les cartes d'un joueur général '''
+    ''' Affichage de toutes les cartes d'un joueur général '''
     def strToutCartes(self):
         s=""
         for carte in self.cartes:
@@ -111,7 +110,7 @@ class Table:
             for j in range(1,14):
                 self.cartes.append((j,i))
 
-    ''' Donner une carte aléatoire à un joueur '''
+    ''' Donner une carte aleatoire à un joueur '''
     def donnercarte(self,j):
         carte = self.cartes.pop(random.randint(0,len(self.cartes)-1))
         j.cartes.append(carte)
@@ -144,19 +143,21 @@ class Table:
                 return True
         return False
 
+    
+    
 
 ''' Quand le joueur décide d'arreter de jouer ou bien quand il dépasse 21 points '''
 def resultatjoueur(joueur,writer):
     if(joueur.score>21):
         writer.write("vous depassez 21 c'est fini\n".encode())
     elif(joueur.score<21):
-        s="vous ete à " + str(joueur.score) + " avec un peu de chance vous allez gagner\n"
+        s="vous etes à " + str(joueur.score) + " avec un peu de chance vous allez gagner\n"
         writer.write(s.encode())
     else:
         s= "vous avez 21 on n'attend plus que le donneur\n" 
         writer.write(s.encode())
 
-''' '''
+''' Fonction de parcour des joueurs '''
 def parcourJoueurs(table, joueur):
     for x in table.joueurs:
         if x.id[0] == joueur.id[0]:
@@ -176,7 +177,7 @@ async def attenteTable(table):
         await asyncio.sleep(1)
         table.temps-=1
 
-''''''
+''' Gestion d'une partie entre joueur et donneur sur une table '''
 async def partie(reader, writer,joueur,table):
     writer.write(".\n".encode())
     while(joueur.joue):
@@ -222,7 +223,7 @@ async def finPartie(table) :
         await asyncio.sleep(1)
 
 
-''' Renvoie la réponse des joueurs selon les commandes fournies'''
+''' Renvoie la réponse des joueurs selon les commandes fournies au bon forma'''
 def commandes(com):
     prefix = com.split()
     if prefix[0] == "NAME":
@@ -235,7 +236,7 @@ def commandes(com):
         return "erreur"
 
 
-''' Crée un croupier et une table avec la durée d'attente pour pouvoir commencer à jouer sur cette table '''
+''' Créer un croupier et une table avec la durée d'attente pour pouvoir commencer à jouer sur cette table '''
 async def gestionCroupier(reader, writer):
     print("Un croupiers creait une table")
     writer.write(("Bienvenue croupier\n").encode())
@@ -252,7 +253,7 @@ async def gestionCroupier(reader, writer):
     listeTable.append(t)
 
 
-''' Crée un joueur, demande à quelle table il veut jouer et commencer la partie '''
+''' Créer un joueur, demande à quelle table il veut jouer et commencer la partie '''
 async def gestionJoueur(reader, writer):
     print("un joueur c'est connecte")
     writer.write(("Bienvenue joueur\n").encode())
@@ -276,7 +277,7 @@ async def gestionJoueur(reader, writer):
     await partie(reader,writer,joueur,table)
 
 
-'''  '''
+''' Permet d'ouvrir une session pour les joueurs ou les croupiers '''
 async def gestionnaire():
     joueurs = await asyncio.start_server(gestionJoueur, '0.0.0.0', 667)
     croupiers = await asyncio.start_server(gestionCroupier, '0.0.0.0', 668)
